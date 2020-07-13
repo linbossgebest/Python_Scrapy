@@ -15,11 +15,10 @@ class DmozSpider(scrapy.Spider):
 
     def parse(self, response):
         sel = scrapy.selector.Selector(response)
-        sites = sel.xpath('//*[@id="site-list-content"]')
+        sites = sel.xpath('//*[@id="site-list-content"]/div')
         items = []
-        # sites = sel.xpath(
-        #     '//*[@id="site-list-content"]/div').extract()
-        # lens = len(sites)
+        # sites = sel.xpath('//*[@id="site-list-content"]/div').extract()
+        lens = len(sel.xpath('//*[@id="site-list-content"]/div').extract())
         # print( '//*[@id="site-list-content"]/div[position]/div[3]/a'.replace("position",str(123123123)))
 
         # for i in range(1,lens+1):
@@ -38,10 +37,17 @@ class DmozSpider(scrapy.Spider):
 
         for site in sites:
             item = DmozItem()
-            item['title'] = site.xpath('.//div/div[3]/a/div/text()').extract()
-            item['link'] = site.xpath('.//div/div[3]/a/@href').extract()
-            item['desc'] = site.xpath('.//div/div[3]/div/text()').extract()
+            item['title'] = site.xpath('.//div[3]/a/div/text()').extract()
+            item['link'] = site.xpath('.//div[3]/a/@href').extract()
+            item['desc'] = site.xpath('.//div[3]/div/text()').extract()
             items.append(item)
+
+        # for site in sites:
+        #     item = DmozItem()
+        #     item['title'] = site.xpath('.//div[1]/div[3]/a/div/text()').extract()
+        #     item['link'] = site.xpath('.//div[1]/div[3]/a/@href').extract()
+        #     item['desc'] = site.xpath('.//div[1]/div[3]/div/text()').extract()
+        #     items.append(item)
 
         return items
 
